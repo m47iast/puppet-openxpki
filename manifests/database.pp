@@ -11,36 +11,33 @@ class openxpki::database (
   String  $pg_version        = '15',   # PostgreSQL major version
 ) {
 
-  # --------------------------------------------------------------------------
   # PostgreSQL global settings (Debian layout)
-  # --------------------------------------------------------------------------
   class { 'postgresql::globals':
     version => $pg_version,
     datadir => "/var/lib/postgresql/${cluster_version}/main",
     confdir => "/etc/postgresql/${cluster_version}/main",
   }
 
-  # --------------------------------------------------------------------------
   # PostgreSQL server setup
-  # --------------------------------------------------------------------------
   class { 'postgresql::server':
     listen_addresses => $listen_address,
     port             => $db_port,
   }
 
-  # --------------------------------------------------------------------------
   # Create OpenXPKI database user
-  # --------------------------------------------------------------------------
   postgresql::server::role { $db_user:
     password_hash => postgresql::postgresql_password($db_user, $db_password),
   }
 
-  # --------------------------------------------------------------------------
   # Create OpenXPKI database
-  # --------------------------------------------------------------------------
   postgresql::server::database { $db_name:
     owner   => $db_user,
     require => Postgresql::Server::Role[$db_user],
+  }
+
+  # Install Perl DBI driver for PostgreSQL (for OpenXPKI to connect to the database).
+  package { 'libdbd-pg-perl' :
+    ensure  => installed,
   }
 
 }
