@@ -35,6 +35,14 @@ class openxpki::database (
     require => Postgresql::Server::Role[$db_user],
   }
 
+  # Grant all privileges on the OpenXPKI database to the OpenXPKI database user.
+  postgresql::server::grant { "${db_user}_grants":
+    privilege => 'ALL',
+    db        => $db_name,
+    role      => $db_user,
+    require   => Postgresql::Server::Database[$db_name],
+  }
+
   # Install Perl DBI driver for PostgreSQL (for OpenXPKI to connect to the database).
   package { 'libdbd-pg-perl' :
     ensure  => installed,
