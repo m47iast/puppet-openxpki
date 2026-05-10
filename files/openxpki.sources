@@ -2,4 +2,4 @@ Types: deb
 URIs: https://packages.openxpki.org/v3/bookworm/
 Suites: bookworm
 Components: release
-Signed-By: /usr/share/keyrings/openxpki.pgp
+Signed-By: /usr/share/keyrings/openxpki-archive-keyring.gpg

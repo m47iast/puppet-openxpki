@@ -1,4 +1,4 @@
-class 'openxpki::install' {
+class openxpki::install {
 
   # Install OpenXPKI official repository sources file
   file { '/etc/apt/sources.list.d/openxpki.sources':
@@ -14,7 +14,7 @@ class 'openxpki::install' {
   }
 
   exec { 'install_openxpki_gpg_key':
-    command => 'wget -q https://packages.openxpki.org/Release.key -O - | gpg -o /usr/share/keyrings/openxpki-archive-keyring.gpg --dearmor',
+    command => 'wget -q https://packages.openxpki.org/v3/bookworm/Release.key -O - | gpg -o /usr/share/keyrings/openxpki-archive-keyring.gpg --dearmor',
     path    => ['/usr/bin'],
     creates => '/usr/share/keyrings/openxpki-archive-keyring.gpg',
     notify  => Exec['openxpki_apt_update'],
@@ -28,7 +28,7 @@ class 'openxpki::install' {
   }
 
   # Install OpenXPKI packages
-  package { 'openxpki':
+  package { ['libopenxpki-perl', 'openxpki-cgi-session-driver', 'openxpki-i18n']:
     ensure  => installed,
     require => [
       File['/etc/apt/sources.list.d/openxpki.sources'],
