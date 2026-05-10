@@ -1,14 +1,14 @@
 class openxpki::softhsm (
   String $slot               = '0',
-  String $token_label        = lookup('softhsm::openxpki_ca::token_label',    { default_value => 'OpenXPKI-CA' }),
-  String $ca_key_label       = lookup('softhsm::openxpki_ca::ca_key_label',   { default_value => 'OpenXPKI-CA-Key' }),
-  String $ocsp_key_label     = lookup('softhsm::openxpki_ca::ocsp_key_label', { default_value => 'OpenXPKI-OCSP-Key' }),
+  String $token_label        = lookup('openxpki::hsm::token_label',    { default_value => 'OpenXPKI-CA' }),
+  String $ca_key_label       = lookup('openxpki::hsm::ca_key_label',   { default_value => 'OpenXPKI-CA-Key' }),
+  String $ocsp_key_label     = lookup('openxpki::hsm::ocsp_key_label', { default_value => 'OpenXPKI-OCSP-Key' }),
   # Path to the SoftHSM PKCS#11 module (may vary based on OS and installation).
   String $pkcs11_module_path = '/usr/lib/softhsm/libsofthsm2.so',
   # No default value, to ensure that sensitive information like passwords are
   # not hardcoded in the manifest and can be securely managed through hiera.
-  String $so_pin,            = lookup('softhsm::openxpki_ca::so_pin'),
-  String $user_pin,          = lookup('softhsm::openxpki_ca::user_pin'),
+  String $so_pin,            = lookup('openxpki::hsm::so_pin'),
+  String $user_pin,          = lookup('openxpki::hsm::user_pin'),
 ) {
 
   # Install SoftHSM2 package for PKCS#11 support.

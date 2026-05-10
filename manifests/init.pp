@@ -1,11 +1,11 @@
 class openxpki (
-  String $keystore_hsm = 'softhsm',  # Default to SoftHSM for PKCS#11 support, can be overridden to use a different HSM backend.
+  String $hsm = lookup('openxpki::hsm', { default_value => 'softhsm' }),
 ) {
 
-  if $keystore_hsm == 'softhsm' {
+  if $hsm == 'softhsm' {
     include openxpki::softhsm
   } else {
-    error("Unsupported keystore HSM backend '${keystore_hsm}' specified. Supported options are: 'softhsm'.")
+    error("Unsupported keystore HSM backend '${hsm}' specified. Supported options are: 'softhsm'.")
   }
 
 }
