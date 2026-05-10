@@ -33,7 +33,7 @@ class openxpki::softhsm (
   # Generate CA keypair if missing
   exec { 'softhsm-generate-ca-key':
     command => "pkcs11-tool --module ${pkcs11_module_path} --keypairgen --key-type rsa:4096 --label ${ca_key_label} --pin ${user_pin}",
-    unless  => "pkcs11-tool --module ${pkcs11_module_path} --list-objects --pin ${user_pin} | grep -q 'label: ${ca_key_label}'",
+    unless  => "pkcs11-tool --module ${pkcs11_module_path} --list-objects --pin ${user_pin} | grep -q 'label: *${ca_key_label}'",
     path    => ['/usr/bin', '/usr/sbin'],
     require => [Package['opensc'], Exec['softhsm-init-token']],
   }
@@ -41,7 +41,7 @@ class openxpki::softhsm (
   # Generate OCSP keypair if missing
   exec { 'softhsm-generate-ocsp-key':
     command => "pkcs11-tool --module ${pkcs11_module_path} --keypairgen --key-type rsa:4096 --label ${ocsp_key_label} --pin ${user_pin}",
-    unless  => "pkcs11-tool --module ${pkcs11_module_path} --list-objects --pin ${user_pin} | grep -q 'label: ${ocsp_key_label}'",
+    unless  => "pkcs11-tool --module ${pkcs11_module_path} --list-objects --pin ${user_pin} | grep -q 'label: *${ocsp_key_label}'",
     path    => ['/usr/bin', '/usr/sbin'],
     require => [Package['opensc'], Exec['softhsm-init-token']],
   }
