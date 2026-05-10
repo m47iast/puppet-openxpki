@@ -8,4 +8,6 @@ class openxpki (
     error("Unsupported keystore HSM backend '${hsm}' specified. Supported options are: 'softhsm'.")
   }
 
+  include openxpki::install
+
 }
