@@ -7,8 +7,8 @@ class openxpki::softhsm (
   String $pkcs11_module_path = '/usr/lib/softhsm/libsofthsm2.so',
   # No default value, to ensure that sensitive information like passwords are
   # not hardcoded in the manifest and can be securely managed through hiera.
-  String $so_pin,            = lookup('openxpki::hsm::so_pin'),
-  String $user_pin,          = lookup('openxpki::hsm::user_pin'),
+  String $so_pin             = lookup('openxpki::hsm::so_pin'),
+  String $user_pin           = lookup('openxpki::hsm::user_pin'),
 ) {
 
   # Install SoftHSM2 package for PKCS#11 support.
