@@ -5,6 +5,7 @@ class openxpki::database (
   # This ensures that sensitive information like passwords is not hardcoded in the
   # manifest and can be securely managed through hiera.
   String  $db_password,
+  String  $db_session_password,
   String  $listen_address    = lookup('openxpki::database::db_host', { default_value => '127.0.0.1' }),
   Integer $db_port           = lookup('openxpki::database::db_port', { default_value => 5432 }),
   String  $cluster_version   = '15',   # Debian cluster layout version
@@ -33,6 +34,37 @@ class openxpki::database (
   postgresql::server::database { $db_name:
     owner   => $db_user,
     require => Postgresql::Server::Role[$db_user],
+  }
+
+  # Install OpenXPKI PostgreSQL schema SQL file and apply to the database
+  # Mimick path and permissions of openxpki.org Debian package sample SQL
+  # schema.
+  file { ['/usr/share/doc/libopenxpki-perl', '/usr/share/doc/libopenxpki-perl/examples']:
+    ensure => directory,
+    mode   => '0644',
+  }
+  file { '/usr/share/doc/libopenxpki-perl/examples/schema-psql.sql':
+    ensure => file,
+    source => 'puppet:///modules/openxpki/schema-psql.sql',
+  }
+  exec { "Apply OpenXPKI schema to ${db_name}":
+    command   => "psql -d ${db_name} -f /usr/share/doc/libopenxpki-perl/examples/schema-psql.sql",
+    unless    => "psql -d ${db_name} -c \"SELECT 1 FROM information_schema.tables WHERE table_name = 'certificate'\" | grep -q 1",
+    path      => ['/usr/bin'],
+    user      => 'postgres',
+    group     => 'postgres',
+    require   => [Postgresql::Server::Database[$db_name], File['/usr/share/doc/libopenxpki-perl/examples/schema-psql.sql']],
+  }
+
+  # Create role and apply grants for OpenXPKI session management
+  postgresql::server::role { 'openxpki_session':
+    password_hash => postgresql::postgresql_password('openxpki_session', $db_session_password),
+  }
+  postgresql::server::grant_table { "Grant permissions to openxpki_session":
+    db         => $db_name,
+    table      => 'frontend_session',
+    privileges => ['SELECT', 'INSERT', 'UPDATE', 'DELETE'],
+    role       => 'openxpki_session',
   }
 
   # Install Perl DBI driver for PostgreSQL (for OpenXPKI to connect to the database).
