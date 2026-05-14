@@ -60,11 +60,13 @@ class openxpki::database (
   postgresql::server::role { 'openxpki_session':
     password_hash => postgresql::postgresql_password('openxpki_session', $db_session_password),
   }
-  postgresql::server::grant_table { "Grant permissions to openxpki_session":
-    db         => $db_name,
-    table      => 'frontend_session',
-    privileges => ['SELECT', 'INSERT', 'UPDATE', 'DELETE'],
-    role       => 'openxpki_session',
+  ['SELECT','INSERT','UPDATE','DELETE'].each |$priv| {
+    postgresql::server::table_grant { "Grant ${priv} to openxpki_session":
+      db         => $db_name,
+      table      => 'frontend_session',
+      privilege  => $priv,
+      role       => 'openxpki_session',
+    }
   }
 
   # Install Perl DBI driver for PostgreSQL (for OpenXPKI to connect to the database).
