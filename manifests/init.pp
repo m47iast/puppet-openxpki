@@ -9,5 +9,6 @@ class openxpki (
   }
 
   include openxpki::install
+  include openxpki::config
 
 }
