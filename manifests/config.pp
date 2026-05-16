@@ -14,16 +14,16 @@ class openxpki::config (
   file { '/etc/openxpki/config.d/system/database.yaml':
     ensure  => file,
     content => template('openxpki/config.d/system/database.yaml.erb'),
-    owner   => 'root',
+    owner   => 'openxpki',
     group   => 'root',
     mode    => '0644',
   }
 
   # Install WebUI service configuration file
-  file { '/etc/openxpki/config.d/client.d/service/webui/default.yaml':
+  file { '/etc/openxpki/client.d/service/webui/default.yaml':
     ensure  => file,
-    content => template('openxpki/config.d/client.d/service/webui/default.yaml.erb'),
-    owner   => 'root',
+    content => template('openxpki/client.d/service/webui/default.yaml.erb'),
+    owner   => 'openxpki',
     group   => 'root',
     mode    => '0644',
   }
