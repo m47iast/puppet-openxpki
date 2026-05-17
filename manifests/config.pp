@@ -15,6 +15,10 @@ class openxpki::config (
   String  $hsm_ocsp_label  = lookup('openxpki::hsm::ocsp_key_label', { default_value => 'OpenXPKI-OCSP-Key' }),
   String  $hsm_pin         = lookup('openxpki::hsm::user_pin',       { default_value => undef }),
   String  $svault_key      = lookup('openxpki::hsm::svault_key',     { default_value => undef }),
+  String  $realm_name      = lookup('openxpki::realm::name',         { default_value => 'default' }),
+  String  $realm_label     = lookup('openxpki::realm::label',        { default_value => 'Default Realm' }),
+  String  $realm_baseurl   = lookup('openxpki::realm::baseurl',      { default_value => 'https://localhost/ca' }),
+  String  $realm_description = lookup('openxpki::realm::description', { default_value => 'Default PKI Realm' }),
 ) {
 
   # Install crtificate database configuration file
