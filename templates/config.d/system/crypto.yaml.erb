@@ -31,22 +31,25 @@ token:
         # The PKCS#11 backend uses a hardware or software HSM. In HLCS this
         # is SoftHSM2. The module path, slot, label and PIN must match the
         # token created during HSM initialization.
-        backend: OpenXPKI::Crypto::Backend::PKCS11
+        backend: OpenXPKI::Crypto::Backend::OpenSSL
         api:     OpenXPKI::Crypto::Backend::API
         engine:  PKCS11
-        key_store: PKCS11
+        key_store: OPENXPKI
+
+        # OpenSSL binary location
+        shell:  <%= @ssl_bin_path %>
 
         # Path to the PKCS#11 provider library
         module: <%= @hsm_module_path %>
 
         # Slot number where the token resides
-        slot: <%= @hsm_slot %>
+        slot:   <%= @hsm_slot %>
 
         # Label of the default key to use
-        label: <%= @hsm_token_label %>
+        label:  <%= @hsm_token_label %>
 
         # User PIN for the token
-        pin: <%= @hsm_pin %>
+        pin:    <%= @hsm_pin %>
 
     javaks:
         backend: OpenXPKI::Crypto::Tool::CreateJavaKeystore
@@ -58,11 +61,12 @@ token:
 
     # Token for CA signing operations
     ca:
-        backend: OpenXPKI::Crypto::Backend::PKCS11
+        backend: OpenXPKI::Crypto::Backend::OpenSSL
         api:     OpenXPKI::Crypto::Backend::API
         engine:  PKCS11
-        key_store: PKCS11
+        key_store: OPENXPKI
 
+        shell:  <%= @ssl_bin_path %>
         module: <%= @hsm_module_path %>
         slot:   <%= @hsm_slot %>
         label:  <%= @hsm_ca_label %>
@@ -70,11 +74,12 @@ token:
 
     # Token for OCSP signing operations
     ocsp:
-        backend: OpenXPKI::Crypto::Backend::PKCS11
+        backend: OpenXPKI::Crypto::Backend::OpenSSL
         api:     OpenXPKI::Crypto::Backend::API
         engine:  PKCS11
-        key_store: PKCS11
+        key_store: OPENXPKI
 
+        shell:  <%= @ssl_bin_path %>
         module: <%= @hsm_module_path %>
         slot:   <%= @hsm_slot %>
         label:  <%= @hsm_ocsp_label %>

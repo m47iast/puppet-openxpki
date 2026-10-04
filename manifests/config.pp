@@ -8,6 +8,7 @@ class openxpki::config (
   String  $db_session_password = lookup('openxpki::database::db_session_password', { default_value => undef }),
   Integer $wait_on_init_retry_count = lookup('openxpki::database::wait_on_init_retry_count', { default_value => undef }),
   Integer $log_level       = lookup('openxpki::database::log_level', { default_value => 0 }),
+  Strign  $ssl_bin_path    = lookup('openxpki::ssl::bin_path', { default_value => '/usr/bin/openssl' }),
   String  $hsm_module_path = lookup('openxpki::hsm::module_path',    { default_value => '/usr/lib/softhsm/libsofthsm2.so' }),
   String  $hsm_slot        = lookup('openxpki::hsm::slot',           { default_value => '0' }),
   String  $hsm_token_label = lookup('openxpki::hsm::token_label',    { default_value => 'OpenXPKI-Default-Key' }),
@@ -15,10 +16,19 @@ class openxpki::config (
   String  $hsm_ocsp_label  = lookup('openxpki::hsm::ocsp_key_label', { default_value => 'OpenXPKI-OCSP-Key' }),
   String  $hsm_pin         = lookup('openxpki::hsm::user_pin',       { default_value => undef }),
   String  $svault_key      = lookup('openxpki::hsm::svault_key',     { default_value => undef }),
-  String  $realm_name      = lookup('openxpki::realm::name',         { default_value => 'default' }),
-  String  $realm_label     = lookup('openxpki::realm::label',        { default_value => 'Default Realm' }),
-  String  $realm_baseurl   = lookup('openxpki::realm::baseurl',      { default_value => 'https://localhost/ca' }),
-  String  $realm_description = lookup('openxpki::realm::description', { default_value => 'Default PKI Realm' }),
+  Hash[String, Hash[String, String]] $realms = lookup(
+    'openxpki::realms', 
+    { 
+      default_value => {
+        'default-realm' => {
+          'label'       => "Default Certificate Authority",
+          'baseurl'     => "https://localhost/webui/hlcs-ca/",
+          'description' => "Default CA Realm",
+          'color'       => "#EFD"
+        },
+      }
+    }
+  ),
 ) {
 
   # Install crtificate database configuration file
