@@ -1,0 +1,42 @@
+{
+  "name": "puppet-openxpki",
+  "version": "0.1.0",
+  "author": "mathi",
+  "summary": "Puppet module for installing and configuring OpenXPKI with SoftHSM2 and PostgreSQL on Debian.",
+  "license": "Apache-2.0",
+  "source": "https://github.com/mathi/puppet-openxpki",
+  "project_page": "https://github.com/mathi/puppet-openxpki",
+  "issues_url": "https://github.com/mathi/puppet-openxpki/issues",
+  "dependencies": [
+    {
+      "name": "puppetlabs/apt",
+      "version_requirement": ">= 9.0.0 < 11.0.0"
+    },
+    {
+      "name": "puppetlabs/postgresql",
+      "version_requirement": ">= 10.0.0 < 13.0.0"
+    }
+  ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "12"
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 7.0.0 < 9.0.0"
+    }
+  ],
+  "tags": [
+    "openxpki",
+    "pki",
+    "ssl",
+    "certificate-authority",
+    "hsm",
+    "debian"
+  ]
+}
