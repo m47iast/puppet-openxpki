@@ -1,0 +1,7 @@
+# .gitignore
+
+# Ignore continue rules
+.continue
+
+# Ignore AGENT-SESSSION.md file
+AGENT-SESSION.md
