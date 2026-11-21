@@ -1,7 +1,4 @@
 # .gitignore
 
-# Ignore continue rules
-.continue
-
-# Ignore AGENT-SESSSION.md file
-AGENT-SESSION.md
+# Ignore SESSION-HANDOVER.md file
+SESSION-HANDOVER.md
