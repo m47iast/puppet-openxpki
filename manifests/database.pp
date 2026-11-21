@@ -1,6 +1,7 @@
 class openxpki::database (
   String  $db_name           = 'openxpki',
   String  $db_user           = lookup('openxpki::database::db_user', { default_value => 'openxpki' }),
+  String  $db_session_user   = lookup('openxpki::database::db_session_user', { default_value => 'openxpki_session' }),
   # No default value, APL (Automatic Parameter Lookup) provides these from hiera data.
   # This ensures that sensitive information like passwords is not hardcoded in the
   # manifest and can be securely managed through hiera.
@@ -57,21 +58,15 @@ class openxpki::database (
   }
 
   # Create role and apply grants for OpenXPKI session management
-  postgresql::server::role { 'openxpki_session':
-    password_hash => postgresql::postgresql_password('openxpki_session', $db_session_password),
+  postgresql::server::role { $db_session_user:
+    password_hash => postgresql::postgresql_password($db_session_user, $db_session_password),
   }
   ['SELECT','INSERT','UPDATE','DELETE'].each |$priv| {
-    postgresql::server::table_grant { "Grant ${priv} to openxpki_session":
+    postgresql::server::table_grant { "Grant ${priv} to ${db_session_user}":
       db         => $db_name,
       table      => 'frontend_session',
       privilege  => $priv,
-      role       => 'openxpki_session',
+      role       => $db_session_user,
     }
   }
-
-  # Install Perl DBI driver for PostgreSQL (for OpenXPKI to connect to the database).
-  package { 'libdbd-pg-perl' :
-    ensure  => installed,
-  }
-
 }

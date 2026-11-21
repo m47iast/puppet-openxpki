@@ -1,3 +1,4 @@
+<%- | String $db_name, String $db_host, String $db_session_user, String[1] $db_session_password, String[1] $webui_cookie_key | -%>
 ## Managed by Puppet - DO NOT EDIT
 ## Module: openxpki, class: openxpki::config
 # This file is part of OpenXPKI config project (https://github.com/openxpki/openxpki-config).
@@ -52,12 +53,12 @@ session:
 
         # below are the settings for openxpki driver
         # DSN and credentals to connect to the database
-        DataSource: dbi:PostgreSQL:dbname=openxpki;host=localhost
+        DataSource: dbi:PostgreSQL:dbname=<%= $db_name %>;host=<%= $db_host %>
         # it is strongly recommended to create a seperate user for this
         # otherwise an attacker on the webservice can access your backend tables!
         # CREATE USER 'openxpki_session'@'localhost' IDENTIFIED BY 'mysecret';
         # GRANT SELECT, INSERT, UPDATE, DELETE ON openxpki.frontend_session TO 'openxpki_session'@'localhost';
-        User: openxpki_session
+        User: <%= $db_session_user %>
         Password: <%= $db_session_password %>
 
         # Set to store session data encrypted in the DB
@@ -92,7 +93,7 @@ session:
 
     # Key to encrypt the session cookie, prevents people with "internal"
     # access to the server or database from stealing frontend sessions
-    cookey: TheCookieMonster
+    cookey: <%= $webui_cookie_key %>
 
 realm:
     # Controls how requests are mapped to realms

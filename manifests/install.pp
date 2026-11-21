@@ -13,7 +13,7 @@ class openxpki::install {
     require  => Apt::Key['openxpki'],
   }
 
-  package { ['libopenxpki-perl', 'openxpki-cgi-session-driver', 'openxpki-i18n']:
+  package { ['libopenxpki-perl', 'openxpki-cgi-session-driver', 'openxpki-i18n', 'libdbd-pg-perl']:
     ensure  => installed,
     require => Apt::Source['openxpki'],
   }

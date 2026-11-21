@@ -1,3 +1,4 @@
+<%- | String $ssl_bin_path, String $hsm_module_path, String $hsm_slot, String $hsm_token_label, String $hsm_ca_label, String $hsm_ocsp_label, String[1] $hsm_pin, Pattern[/\A[0-9A-Fa-f]{64}\z/] $svault_key, String[1] $crypto_default_secret, String[1] $crypto_ratoken_secret | -%>
 ## Managed by Puppet - DO NOT EDIT
 ## Module: openxpki, class: openxpki::config
 # This file is part of OpenXPKI config project (https://github.com/openxpki/openxpki-config).
@@ -37,19 +38,19 @@ token:
         key_store: OPENXPKI
 
         # OpenSSL binary location
-        shell:  <%= @ssl_bin_path %>
+        shell:  <%= $ssl_bin_path %>
 
         # Path to the PKCS#11 provider library
-        module: <%= @hsm_module_path %>
+        module: <%= $hsm_module_path %>
 
         # Slot number where the token resides
-        slot:   <%= @hsm_slot %>
+        slot:   <%= $hsm_slot %>
 
         # Label of the default key to use
-        label:  <%= @hsm_token_label %>
+        label:  <%= $hsm_token_label %>
 
         # User PIN for the token
-        pin:    <%= @hsm_pin %>
+        pin:    <%= $hsm_pin %>
 
     javaks:
         backend: OpenXPKI::Crypto::Tool::CreateJavaKeystore
@@ -66,11 +67,11 @@ token:
         engine:  PKCS11
         key_store: OPENXPKI
 
-        shell:  <%= @ssl_bin_path %>
-        module: <%= @hsm_module_path %>
-        slot:   <%= @hsm_slot %>
-        label:  <%= @hsm_ca_label %>
-        pin:    <%= @hsm_pin %>
+        shell:  <%= $ssl_bin_path %>
+        module: <%= $hsm_module_path %>
+        slot:   <%= $hsm_slot %>
+        label:  <%= $hsm_ca_label %>
+        pin:    <%= $hsm_pin %>
 
     # Token for OCSP signing operations
     ocsp:
@@ -79,11 +80,11 @@ token:
         engine:  PKCS11
         key_store: OPENXPKI
 
-        shell:  <%= @ssl_bin_path %>
-        module: <%= @hsm_module_path %>
-        slot:   <%= @hsm_slot %>
-        label:  <%= @hsm_ocsp_label %>
-        pin:    <%= @hsm_pin %>
+        shell:  <%= $ssl_bin_path %>
+        module: <%= $hsm_module_path %>
+        slot:   <%= $hsm_slot %>
+        label:  <%= $hsm_ocsp_label %>
+        pin:    <%= $hsm_pin %>
 
 
 # Secret group to be shared in all realms
@@ -92,7 +93,7 @@ secret:
         label: Global secret group
         export: 0
         method: literal
-        value: root
+        value: <%= $crypto_default_secret %>
         # if you want to enter the password after startup via the Webui
         # replace method and value above with this block, kcv is optional
         # but highly recommended as wrong passwords let the engine crash
@@ -106,11 +107,11 @@ secret:
         label: Secret group for RA Token
         export: 1
         method: literal
-        value: secret
+        value: <%= $crypto_ratoken_secret %>
 
     svault:
         label: Secret group for datavault encryption
         method: literal
         # please set your own key string here and keep it in a safe place
         # this must be 64 characters hex -> "openssl  rand -hex 32"
-        value: <%= @svault_key %>
+        value: <%= $svault_key %>

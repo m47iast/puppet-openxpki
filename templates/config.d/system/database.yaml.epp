@@ -1,0 +1,17 @@
+<%- | String $db_type, String $db_name, String $db_host, Integer $db_port, String[1] $db_user, String[1] $db_password, Optional[Integer] $wait_on_init_retry_count | -%>
+## Managed by Puppet - DO NOT EDIT
+## Module: openxpki, class: openxpki::config
+## https://openxpki.readthedocs.io/en/master/configuration/server.html
+main:
+    debug: 0
+    type: <%= $db_type %>
+    name: <%= $db_name %>
+    host: <%= $db_host %>
+    port: <%= $db_port %>
+    user: <%= $db_user %>
+    passwd: <%= $db_password %>
+    <% if $wait_on_init_retry_count { -%>
+    wait_on_init:
+       retry_count: <%= $wait_on_init_retry_count %>
+       retry_interval: 30
+    <% } -%>
