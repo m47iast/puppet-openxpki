@@ -2,6 +2,14 @@
 
 Record confirmed decisions that materially affect the module's implementation or maintenance. Keep entries in reverse chronological order, newest first. For each open design issue, use a query-response exchange: present a brief description of the common options and their respective pros and cons, ask one focused question, and record the selected decision and its consequences after the user responds. Do not treat an unanswered question as a decision.
 
+## 2026-11-22 - Sensitive Secret Parameters
+
+**Status:** Confirmed
+
+Use Puppet `Sensitive` types end-to-end for first-release secret parameters, including database passwords, HSM PINs, vault and crypto secrets, WebUI cookie key, and local account password hashes.
+
+**Consequences:** Wrap secret values in `Sensitive[String[1]]`, unwrap only at a resource or template call that requires plaintext, and preserve redaction in catalogs and reports. The existing HSM shell-command argument exposure remains a separate Phase 5 implementation-hardening concern.
+
 ## 2026-11-21 - WebUI TLS Ownership Handoff
 
 **Status:** Confirmed

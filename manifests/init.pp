@@ -1,6 +1,6 @@
 class openxpki (
-  String  $hsm             = lookup('openxpki::hsm', { default_value => 'softhsm' }),
-  Boolean $manage_database = lookup('openxpki::manage_database', { default_value => true }),
+  Enum['softhsm'] $hsm       = lookup('openxpki::hsm', { default_value => 'softhsm' }),
+  Boolean         $manage_database = lookup('openxpki::manage_database', { default_value => true }),
 ) {
 
   if $hsm == 'softhsm' {

@@ -1,4 +1,4 @@
-<%- | String $ssl_bin_path, String $hsm_module_path, String $hsm_slot, String $hsm_token_label, String $hsm_ca_label, String $hsm_ocsp_label, String[1] $hsm_pin, Pattern[/\A[0-9A-Fa-f]{64}\z/] $svault_key, String[1] $crypto_default_secret, String[1] $crypto_ratoken_secret | -%>
+<%- | String $ssl_bin_path, String $hsm_module_path, String $hsm_slot, String $hsm_token_label, String $hsm_ca_label, String $hsm_ocsp_label, Sensitive[String[1]] $hsm_pin, Sensitive[Pattern[/\A[0-9A-Fa-f]{64}\z/]] $svault_key, Sensitive[String[1]] $crypto_default_secret, Sensitive[String[1]] $crypto_ratoken_secret | -%>
 ## Managed by Puppet - DO NOT EDIT
 ## Module: openxpki, class: openxpki::config
 # This file is part of OpenXPKI config project (https://github.com/openxpki/openxpki-config).
@@ -50,7 +50,7 @@ token:
         label:  <%= $hsm_token_label %>
 
         # User PIN for the token
-        pin:    <%= $hsm_pin %>
+        pin:    <%= unwrap($hsm_pin) %>
 
     javaks:
         backend: OpenXPKI::Crypto::Tool::CreateJavaKeystore
@@ -71,7 +71,7 @@ token:
         module: <%= $hsm_module_path %>
         slot:   <%= $hsm_slot %>
         label:  <%= $hsm_ca_label %>
-        pin:    <%= $hsm_pin %>
+        pin:    <%= unwrap($hsm_pin) %>
 
     # Token for OCSP signing operations
     ocsp:
@@ -84,7 +84,7 @@ token:
         module: <%= $hsm_module_path %>
         slot:   <%= $hsm_slot %>
         label:  <%= $hsm_ocsp_label %>
-        pin:    <%= $hsm_pin %>
+        pin:    <%= unwrap($hsm_pin) %>
 
 
 # Secret group to be shared in all realms
@@ -93,7 +93,7 @@ secret:
         label: Global secret group
         export: 0
         method: literal
-        value: <%= $crypto_default_secret %>
+        value: <%= unwrap($crypto_default_secret) %>
         # if you want to enter the password after startup via the Webui
         # replace method and value above with this block, kcv is optional
         # but highly recommended as wrong passwords let the engine crash
@@ -107,11 +107,11 @@ secret:
         label: Secret group for RA Token
         export: 1
         method: literal
-        value: <%= $crypto_ratoken_secret %>
+        value: <%= unwrap($crypto_ratoken_secret) %>
 
     svault:
         label: Secret group for datavault encryption
         method: literal
         # please set your own key string here and keep it in a safe place
         # this must be 64 characters hex -> "openssl  rand -hex 32"
-        value: <%= $svault_key %>
+        value: <%= unwrap($svault_key) %>

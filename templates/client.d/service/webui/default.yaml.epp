@@ -1,4 +1,4 @@
-<%- | String $db_name, String $db_host, String $db_session_user, String[1] $db_session_password, String[1] $webui_cookie_key | -%>
+<%- | String $db_name, String $db_host, String $db_session_user, Sensitive[String[1]] $db_session_password, Sensitive[String[1]] $webui_cookie_key | -%>
 ## Managed by Puppet - DO NOT EDIT
 ## Module: openxpki, class: openxpki::config
 # This file is part of OpenXPKI config project (https://github.com/openxpki/openxpki-config).
@@ -59,7 +59,7 @@ session:
         # CREATE USER 'openxpki_session'@'localhost' IDENTIFIED BY 'mysecret';
         # GRANT SELECT, INSERT, UPDATE, DELETE ON openxpki.frontend_session TO 'openxpki_session'@'localhost';
         User: <%= $db_session_user %>
-        Password: <%= $db_session_password %>
+        Password: <%= unwrap($db_session_password) %>
 
         # Set to store session data encrypted in the DB
         EncryptKey: SessionSecret
@@ -93,7 +93,7 @@ session:
 
     # Key to encrypt the session cookie, prevents people with "internal"
     # access to the server or database from stealing frontend sessions
-    cookey: <%= $webui_cookie_key %>
+    cookey: <%= unwrap($webui_cookie_key) %>
 
 realm:
     # Controls how requests are mapped to realms

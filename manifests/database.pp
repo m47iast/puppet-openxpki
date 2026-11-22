@@ -1,14 +1,11 @@
 class openxpki::database (
-  String  $db_name           = 'openxpki',
-  String  $db_user           = lookup('openxpki::database::db_user', { default_value => 'openxpki' }),
-  String  $db_session_user   = lookup('openxpki::database::db_session_user', { default_value => 'openxpki_session' }),
-  # No default value, APL (Automatic Parameter Lookup) provides these from hiera data.
-  # This ensures that sensitive information like passwords is not hardcoded in the
-  # manifest and can be securely managed through hiera.
-  String  $db_password,
-  String  $db_session_password,
-  String  $listen_address    = lookup('openxpki::database::db_host', { default_value => '127.0.0.1' }),
-  Integer $db_port           = lookup('openxpki::database::db_port', { default_value => 5432 }),
+  String[1] $db_name         = 'openxpki',
+  String[1] $db_user         = lookup('openxpki::database::db_user', { default_value => 'openxpki' }),
+  String[1] $db_session_user = lookup('openxpki::database::db_session_user', { default_value => 'openxpki_session' }),
+  Sensitive[String[1]] $db_password,
+  Sensitive[String[1]] $db_session_password,
+  String[1] $listen_address  = lookup('openxpki::database::db_host', { default_value => '127.0.0.1' }),
+  Integer[1, 65535] $db_port = lookup('openxpki::database::db_port', { default_value => 5432 }),
   String  $cluster_version   = '15',   # Debian cluster layout version
   String  $pg_version        = '15',   # PostgreSQL major version
 ) {
@@ -28,7 +25,7 @@ class openxpki::database (
 
   # Create OpenXPKI database user
   postgresql::server::role { $db_user:
-    password_hash => postgresql::postgresql_password($db_user, $db_password),
+    password_hash => postgresql::postgresql_password($db_user, unwrap($db_password)),
   }
 
   # Create OpenXPKI database
@@ -59,7 +56,7 @@ class openxpki::database (
 
   # Create role and apply grants for OpenXPKI session management
   postgresql::server::role { $db_session_user:
-    password_hash => postgresql::postgresql_password($db_session_user, $db_session_password),
+    password_hash => postgresql::postgresql_password($db_session_user, unwrap($db_session_password)),
   }
   ['SELECT','INSERT','UPDATE','DELETE'].each |$priv| {
     postgresql::server::table_grant { "Grant ${priv} to ${db_session_user}":
