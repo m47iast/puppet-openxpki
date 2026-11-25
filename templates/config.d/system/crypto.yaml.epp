@@ -29,9 +29,9 @@ token:
         # ------------------------------------------------------------------
         # PKCS#11 backend (SoftHSM)
         # ------------------------------------------------------------------
-        # The PKCS#11 backend uses a hardware or software HSM. In HLCS this
-        # is SoftHSM2. The module path, slot, label and PIN must match the
-        # token created during HSM initialization.
+        # The PKCS#11 backend uses a hardware or software HSM. This module
+        # defaults to SoftHSM2. The module path, slot, label and PIN must 
+        # match the token created during HSM initialization.
         backend: OpenXPKI::Crypto::Backend::OpenSSL
         api:     OpenXPKI::Crypto::Backend::API
         engine:  PKCS11

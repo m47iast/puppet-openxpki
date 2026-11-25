@@ -26,7 +26,7 @@ class openxpki::config (
       default_value => {
         'default-realm' => {
           'label'       => "Default Certificate Authority",
-          'baseurl'     => "https://localhost/webui/hlcs-ca/",
+          'baseurl'     => "https://localhost/webui/default/",
           'description' => "Default CA Realm",
           'color'       => "#EFD"
         },
